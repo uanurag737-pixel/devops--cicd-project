@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI DevOps Troubleshooting Assistant</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 20px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            font-size: 16px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            min-height: 100px;
+        }
+
+        .loading {
+            color: #facc15;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🤖 AI DevOps Troubleshooting Assistant</h1>
+
+    <p>
+        Paste any Linux, Docker, Jenkins or Kubernetes error below.
+    </p>
+
+    <textarea
+        id="errorInput"
+        placeholder="Example: Kubernetes pod is in CrashLoopBackOff..."
+    ></textarea>
+
+    <br>
+
+    <button onclick="analyzeError()">
+        Analyze Error
+    </button>
+
+    <div id="result">
+        AI analysis will appear here...
+    </div>
+
+</div>
+
+<script>
+
+async function analyzeError() {
+
+    const errorInput = document.getElementById("errorInput").value;
+    const result = document.getElementById("result");
+
+    if (!errorInput.trim()) {
+        result.innerText = "Please enter a DevOps error first.";
+        return;
+    }
+
+    result.innerHTML =
+        '<span class="loading">Analyzing error with AI...</span>';
+
+    try {
+
+        const response = await fetch("/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                error: errorInput
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.analysis) {
+            result.innerText = data.analysis;
+        } else {
+            result.innerText =
+                data.error || "Something went wrong.";
+        }
+
+    } catch (error) {
+
+        result.innerText =
+            "Unable to connect to AI backend: " + error;
+    }
+}
+
+</script>
+
+</body>
+</html>
