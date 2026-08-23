@@ -22,4 +22,4 @@ spec:
           image: anurag0626/devops-cicd:v1
 
           ports:
-            - containerPort: 80
+            - containerPort: 5000
